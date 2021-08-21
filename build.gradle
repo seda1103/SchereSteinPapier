@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+}
+
+group 'com.abas'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.2',
+            'org.mockito:mockito-junit-jupiter:3.12.0',
+            'org.hamcrest:hamcrest-library:2.1'
+    )
+}
+
+test {
+    useJUnitPlatform()
+}
+
+
+
+apply plugin: 'java'
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'com.abas.main.MainApplication'
+    }
+    archiveClassifier = "all"
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+}
+
